@@ -69,5 +69,5 @@ Here, the p-value for each test is very small, indicating a definite increase in
 **Conclusions:**
 From the data analysis it is pretty clear that increases in the dosage of vitamin C given to the subjects leads to increases in tooth length and the same is true with orange juice. We can see in the plots and the tests that the tooth length increases as dosage increases, and at two low dosages, OJ works better than VC with similar effects, but at the high dosage, OJ and VC shows no difference. The effect of supplement does depend on levels of dose, therefore, there is a supp-dose interactions.
 
-The full code for this project is available at:
+The full code for this project is available at: https://github.com/panos1977/Statistical-Inference/blob/master/project2.Rmd
 
