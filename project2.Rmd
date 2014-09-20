@@ -1,0 +1,73 @@
+---
+title: Course Project 2
+fontsize: 9pt
+geometry: margin = 0.10in
+output: pdf_document
+---
+
+**Loading Data and Exploratory Data Analysis:**
+First, we load the dataset of project called ToothGrowth which is included in the R datasets package.
+
+```{r echo = FALSE}
+library(datasets)
+data(ToothGrowth)
+attach(ToothGrowth)
+```
+
+After loading of the data, we can explore the structure and the first rows in this dataset.
+
+```{r echo = FALSE}
+str(ToothGrowth)
+head(ToothGrowth, 3)
+```
+
+We can see that the dataset contains 60 observations of 3 variables. You can view more information about the `ToothGrowth` dataset by entering `?ToothGrowth`. Based on the above reported results we can see that the dataset contains the results of an experiment to determine the effect of two supplements (Vitamin C and Orange Juice), each at three different doses (0.5, 1 or 2 mg) on tooth length in guinea pigs. The `len` qunatiative variable gives the tooth length, the `supp` qualitative variable gives the supplement type (i.e. Vitamine C - VC or Orange Juice - OJ) and the `dose` quantitative variable gives the supplement dose in milligrams.
+
+We can also depict the data of the dataset in a boxplot. More specifically, we plot the tooth length againt the dose, given type of supplement. In this case we treat the dose variable as a categorical variable in order to make the graph.
+
+```{r echo = FALSE, fig.height = 3, fig.width = 4}
+library(ggplot2)
+g <- ggplot(ToothGrowth, aes(x = factor(dose), y = len, fill = supp))
+g + geom_boxplot() + ggtitle("Tooth length vs dose and supp") + xlab("Dose") + ylab("Length")
+```
+
+Based on the above box-plots, two things are apparent. First, the data looks relatively normal, there are no signs of severe skewness or the presence of outliers in any. Second, it looks pretty clear that increases in
+the dosage of vitamin C and Orange Juice given to the guinea pigs leads to increases in tooth length. Furthermore, it appears that OJ and Vitamin C work equally well at the maximum dose, though OJ is superior at the lower doses, as shown in above plot.
+
+**Basic Summary of the Data:**
+Here we give a brief summary of the dataset.
+
+```{r echo = FALSE}
+summary(ToothGrowth)
+```
+
+Furthermore, we give numerical summaries (i.e. means and standard deviations) for data aggregated by supplement and dose.
+
+```{r echo = FALSE}
+print("Means:")
+tapply(len, list(supp, dose), mean)
+print("Stadard deviations:")
+tapply(len, list(supp, dose), var)
+```
+
+**Statistical Tests and Assumptions:**
+Here, we will use the 95% confidence interval and t-tests for the mean difference in tooth growth by supplement type. The assumptions here are: that this is an unpaired mean differences test so there is no other cause of tooth length differences other than supplement; the populations are approximately normal; that the variances are approximately equal; the samples are independent:
+```{r, echo = FALSE}
+t.test(ToothGrowth[supp == 'OJ', 1], ToothGrowth[supp == 'VC', 1], paired = F, var.equal = T)
+```
+
+Assuming the null hypothesis is that there is no difference (i.e. difference = 0), we would not reject the null hypothesis in this case as the confidence interval includes 0, p = 0.06, 95% CI: (-0.17, 7.57). Orange juice appears to be a better supplement for tooth growth than vitamin C with a mean difference of 3.7, but this does not quite reach statistical significance.
+
+On the other hand, we use three t-tests for the mean difference in tooth growth by the three types of doses, two at a time.  We will use the same assumptions here:
+```{r, echo = FALSE}
+t.test(ToothGrowth[dose == 1.0, 1], ToothGrowth[dose == 0.5, 1], paired = F, var.equal = T)
+t.test(ToothGrowth[dose == 2.0, 1], ToothGrowth[dose == 0.5, 1], paired = F, var.equal = T)
+t.test(ToothGrowth[dose == 2.0, 1], ToothGrowth[dose == 1.0, 1], paired=F, var.equal=T)
+```
+Here, the p-value for each test is very small, indicating a definite increase in growth with increasing dose.  The 95% confidence interval for this ranges from (12.84, 18.15) comparing dose 2.0 to 0.5 dose, to (3.73, 8.99) comparing dose  2.0 to 1.0, though they are all above the zero that would be predicted under the null hypothesis.
+
+**Conclusions:**
+From the data analysis it is pretty clear that increases in the dosage of vitamin C given to the subjects leads to increases in tooth length and the same is true with orange juice. We can see in the plots and the tests that the tooth length increases as dosage increases, and at two low dosages, OJ works better than VC with similar effects, but at the high dosage, OJ and VC shows no difference. The effect of supplement does depend on levels of dose, therefore, there is a supp-dose interactions.
+
+The full code for this project is available at:
+
